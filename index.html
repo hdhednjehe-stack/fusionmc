@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="de" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0d0b14">
+  <meta name="description" content="Fusion MC – Kombiniere deine Welt. Entdecke unser Minecraft-SMP und werde Teil des nächsten Levels.">
+  <title>Fusion MC — Kombiniere deine Welt</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            fusion: { purple: '#A020F0', violet: '#9B51E0', night: '#0D0B14', card: '#161224', muted: '#A9A3B8' }
+          },
+          fontFamily: {
+            display: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif']
+          },
+          boxShadow: {
+            neon: '0 0 25px rgba(160,32,240,.28), 0 0 70px rgba(160,32,240,.12)',
+            'neon-strong': '0 0 18px rgba(160,32,240,.5), 0 0 50px rgba(160,32,240,.24)'
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root { color-scheme: dark; --bg:#0D0B14; --card:#161224; --purple:#A020F0; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--bg); color:#fff; font-family:Inter,system-ui,sans-serif; overflow-x:hidden; }
+    ::selection { background:rgba(160,32,240,.45); color:#fff; }
+    .site-bg {
+      position:fixed; inset:0; z-index:-3; pointer-events:none;
+      background:
+        radial-gradient(ellipse at 16% 18%, rgba(103,35,171,.22), transparent 35%),
+        radial-gradient(ellipse at 85% 35%, rgba(160,32,240,.14), transparent 32%),
+        linear-gradient(180deg,#0d0b14 0%,#100b1b 48%,#0d0b14 100%);
+    }
+    .site-grid {
+      position:fixed; inset:0; z-index:-2; pointer-events:none; opacity:.16;
+      background-image:linear-gradient(rgba(179,122,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(179,122,255,.08) 1px,transparent 1px);
+      background-size:58px 58px; mask-image:linear-gradient(to bottom,black,transparent 82%);
+    }
+    #particles { position:fixed; inset:0; width:100%; height:100%; z-index:-1; pointer-events:none; opacity:.65; }
+    .glass { background:rgba(18,14,29,.76); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); border:1px solid rgba(194,146,255,.13); }
+    .gradient-text { background:linear-gradient(100deg,#fff 4%,#dcb6ff 45%,#a020f0 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
+    .hero-title { text-shadow:0 3px 0 #37105b,0 8px 0 #240b3d,0 12px 30px rgba(160,32,240,.45); letter-spacing:-.075em; }
+    .glow-orb { position:absolute; border-radius:50%; filter:blur(70px); opacity:.24; pointer-events:none; animation:orb 9s ease-in-out infinite alternate; }
+    @keyframes orb { from { transform:translate3d(0,0,0) scale(1); } to { transform:translate3d(30px,-24px,0) scale(1.12); } }
+    .btn-primary { position:relative; isolation:isolate; overflow:hidden; background:linear-gradient(135deg,#b52cff,#8124d2); box-shadow:0 5px 0 #4c167d,0 12px 28px rgba(160,32,240,.24); transition:transform .2s,box-shadow .2s,filter .2s; }
+    .btn-primary::before { content:""; position:absolute; inset:0; z-index:-1; transform:translateX(-120%) skewX(-20deg); background:linear-gradient(90deg,transparent,rgba(255,255,255,.23),transparent); transition:transform .6s; }
+    .btn-primary:hover::before { transform:translateX(120%) skewX(-20deg); }
+    .btn-primary:hover { transform:translateY(-2px); box-shadow:0 7px 0 #4c167d,0 16px 35px rgba(160,32,240,.38); filter:brightness(1.08); }
+    .btn-primary:active { transform:translateY(3px); box-shadow:0 2px 0 #4c167d,0 6px 16px rgba(160,32,240,.25); }
+    .feature-card { position:relative; overflow:hidden; background:linear-gradient(145deg,rgba(29,22,46,.92),rgba(17,13,27,.96)); border:1px solid rgba(177,115,255,.15); transition:transform .3s,border-color .3s,box-shadow .3s; }
+    .feature-card::after { content:""; position:absolute; width:180px; height:180px; top:-100px; right:-90px; border-radius:50%; background:rgba(160,32,240,.12); filter:blur(30px); transition:opacity .3s; opacity:.45; }
+    .feature-card:hover { transform:translateY(-7px); border-color:rgba(192,119,255,.55); box-shadow:0 20px 50px rgba(0,0,0,.25),0 0 28px rgba(160,32,240,.1); }
+    .feature-card:hover::after { opacity:1; }
+    .icon-tile { background:linear-gradient(145deg,rgba(160,32,240,.22),rgba(95,38,151,.08)); border:1px solid rgba(190,129,255,.2); box-shadow:inset 0 1px rgba(255,255,255,.07); }
+    .section-kicker { color:#d2a2ff; letter-spacing:.22em; text-transform:uppercase; font-size:.72rem; font-weight:800; }
+    .section-title { letter-spacing:-.045em; }
+    .section-line { height:1px; background:linear-gradient(90deg,transparent,rgba(160,32,240,.55),transparent); }
+    .reveal { opacity:0; transform:translateY(22px); transition:opacity .7s ease,transform .7s ease; }
+    .reveal.is-visible { opacity:1; transform:translateY(0); }
+    .status-dot { display:inline-block; width:9px; height:9px; border-radius:50%; background:#a855f7; box-shadow:0 0 0 0 rgba(168,85,247,.6); animation:pulse 1.8s infinite; }
+    @keyframes pulse { 70% { box-shadow:0 0 0 8px rgba(168,85,247,0); } 100% { box-shadow:0 0 0 0 rgba(168,85,247,0); } }
+    .ip-box { background:rgba(9,7,15,.75); border:1px solid rgba(179,111,255,.28); box-shadow:inset 0 0 28px rgba(160,32,240,.06),0 0 35px rgba(160,32,240,.08); }
+    .nav-link { color:#c8c2d5; transition:color .2s; }
+    .nav-link:hover,.nav-link:focus-visible { color:#fff; }
+    .nav-link:hover::after { width:100%; }
+    .nav-link::after { content:""; display:block; width:0; height:2px; margin-top:4px; background:#b54cff; transition:width .25s; }
+    .mobile-menu { display:none; }
+    .mobile-menu.open { display:block; }
+    .toast { opacity:0; transform:translate(-50%,16px); pointer-events:none; transition:opacity .25s,transform .25s; }
+    .toast.show { opacity:1; transform:translate(-50%,0); }
+    .social-card { background:linear-gradient(135deg,rgba(33,23,51,.9),rgba(17,13,27,.94)); border:1px solid rgba(177,115,255,.16); transition:transform .25s,border-color .25s; }
+    .social-card:hover { transform:translateY(-4px); border-color:rgba(192,119,255,.5); }
+    .countdown-box { min-width:58px; border:1px solid rgba(190,129,255,.24); border-radius:12px; background:linear-gradient(145deg,rgba(160,32,240,.18),rgba(16,11,26,.9)); padding:10px 8px; text-align:center; box-shadow:inset 0 1px rgba(255,255,255,.05),0 0 18px rgba(160,32,240,.08); }
+    .countdown-box span { display:block; font-variant-numeric:tabular-nums; font-size:clamp(1.15rem,3vw,1.7rem); line-height:1.2; font-weight:900; color:#ead4ff; text-shadow:0 0 16px rgba(160,32,240,.55); }
+    .countdown-box small { display:block; margin-top:5px; font-size:9px; text-transform:uppercase; letter-spacing:.12em; color:rgba(255,255,255,.48); font-weight:800; }
+    .confetti-piece { position:fixed; z-index:120; top:-18px; width:8px; height:13px; border-radius:2px; pointer-events:none; animation:confetti-fall 1.8s cubic-bezier(.15,.65,.3,1) forwards; }
+    @keyframes confetti-fall { to { transform:translate3d(var(--drift),110vh,0) rotate(720deg); opacity:0; } }
+    @media (prefers-reduced-motion:reduce) {
+      *,*::before,*::after { scroll-behavior:auto!important; animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; }
+      .reveal { opacity:1; transform:none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="site-bg" aria-hidden="true"></div>
+  <div class="site-grid" aria-hidden="true"></div>
+  <canvas id="particles" aria-hidden="true"></canvas>
+
+  <header class="fixed top-0 left-0 right-0 z-50">
+    <nav class="glass mx-auto mt-3 flex max-w-[1440px] items-center justify-between rounded-2xl px-4 py-3 sm:mx-5 sm:px-6 lg:mx-auto lg:mt-4 lg:px-8" aria-label="Hauptnavigation">
+      <a href="#start" class="flex shrink-0 items-center gap-3" aria-label="Fusion MC Startseite">
+        <span class="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-fuchsia-500 to-violet-800 font-black shadow-neon">
+          <span id="fusion-logo-mark" class="text-xl">F</span>
+          <span class="absolute -right-1 -top-1 h-3 w-3 rounded-full border-2 border-[#120d1d] bg-purple-300"></span>
+        </span>
+        <span class="leading-tight">
+          <span class="block text-base font-black tracking-tight sm:text-lg">FUSION <span class="text-fuchsia-400">MC</span></span>
+          <span class="hidden text-[9px] font-bold uppercase tracking-[.22em] text-purple-200/70 sm:block">Kombiniere deine Welt</span>
+        </span>
+      </a>
+
+      <div class="hidden items-center gap-5 xl:flex 2xl:gap-7">
+        <a class="nav-link text-sm font-semibold" href="#start">Startseite</a>
+        <a class="nav-link text-sm font-semibold" href="#ueber-uns">Über uns</a>
+        <a class="nav-link text-sm font-semibold" href="#shop">Shop</a>
+        <a class="nav-link text-sm font-semibold" href="#regelwerk">Regelwerk</a>
+      </div>
+
+      <div class="hidden shrink-0 items-center gap-2 sm:flex">
+        <a href="https://www.youtube.com/@fusionmc_minecraft" target="_blank" rel="noopener noreferrer" aria-label="Fusion MC auf YouTube ansehen" class="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/[.04] px-4 py-3 text-sm font-bold text-white transition hover:border-red-300/40 hover:bg-white/[.08]">▶ YouTube</a>
+        <a href="https://discord.gg/5kWAM6RYW6" target="_blank" rel="noopener noreferrer" class="btn-primary inline-flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-extrabold">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.7 5.1A18.4 18.4 0 0 0 15.2 3.7l-.6 1.2a17 17 0 0 0-5.2 0l-.6-1.2a18.4 18.4 0 0 0-4.5 1.4C1.5 9.3.7 13.4 1.1 17.5a18.6 18.6 0 0 0 5.5 2.8l1.2-2a12 12 0 0 1-1.9-.9l.5-.4a13.2 13.2 0 0 0 11.2 0l.5.4a12 12 0 0 1-1.9.9l1.2 2a18.6 18.6 0 0 0 5.5-2.8c.5-4.7-.8-8.8-3.2-12.4ZM8.7 14.8c-1.1 0-2-1-2-2.2s.9-2.2 2-2.2 2 1 2 2.2-.9 2.2-2 2.2Zm6.6 0c-1.1 0-2-1-2-2.2s.9-2.2 2-2.2 2 1 2 2.2-.9 2.2-2 2.2Z"/></svg>
+          Discord beitreten
+        </a>
+      </div>
+      <button id="menu-toggle" class="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white sm:ml-3 xl:hidden" aria-expanded="false" aria-controls="mobile-menu" aria-label="Menü öffnen">
+        <svg id="menu-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </nav>
+    <div id="mobile-menu" class="mobile-menu glass mx-4 mt-2 rounded-2xl p-4 sm:mx-8 xl:hidden">
+      <div class="grid gap-1">
+        <a class="mobile-link rounded-lg px-3 py-3 text-sm font-semibold text-white/80 hover:bg-white/5" href="#start">Startseite</a>
+        <a class="mobile-link rounded-lg px-3 py-3 text-sm font-semibold text-white/80 hover:bg-white/5" href="#ueber-uns">Über uns</a>
+        <a class="mobile-link rounded-lg px-3 py-3 text-sm font-semibold text-white/80 hover:bg-white/5" href="#shop">Shop</a>
+        <a class="mobile-link rounded-lg px-3 py-3 text-sm font-semibold text-white/80 hover:bg-white/5" href="#regelwerk">Regelwerk</a>
+        <a href="https://discord.gg/5kWAM6RYW6" target="_blank" rel="noopener noreferrer" class="btn-primary mt-2 rounded-xl px-4 py-3 text-center text-sm font-extrabold">Discord beitreten ↗</a>
+        <a href="https://www.youtube.com/@fusionmc_minecraft" target="_blank" rel="noopener noreferrer" class="mt-2 rounded-xl border border-white/15 bg-white/[.04] px-4 py-3 text-center text-sm font-bold text-white hover:bg-white/[.08]">▶ YouTube ansehen ↗</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="start" class="relative flex min-h-[780px] items-center overflow-hidden px-5 pb-20 pt-36 sm:min-h-[850px] sm:px-8 lg:min-h-[900px]">
+      <div class="glow-orb left-[8%] top-[20%] h-56 w-56 bg-fuchsia-600"></div>
+      <div class="glow-orb right-[8%] top-[30%] h-72 w-72 bg-violet-700" style="animation-delay:-4s"></div>
+      <div class="relative mx-auto grid w-full max-w-7xl items-center gap-12 lg:grid-cols-[1.05fr_.95fr] lg:gap-8">
+        <div class="relative z-10 text-center lg:text-left">
+          <div class="mb-7 inline-flex items-center gap-2 rounded-full border border-purple-400/25 bg-purple-500/10 px-4 py-2 text-xs font-bold text-purple-100 shadow-neon">
+            <span class="status-dot"></span>
+            <span>DEIN NÄCHSTES MINECRAFT-KAPITEL</span>
+          </div>
+          <p class="mb-3 text-sm font-extrabold uppercase tracking-[.35em] text-purple-200/80">Kombiniere deine Welt</p>
+          <h1 class="hero-title text-6xl font-black leading-[.92] sm:text-8xl lg:text-[7.5rem] xl:text-[8.5rem]">
+            FUSION<br><span class="gradient-text">MC</span>
+          </h1>
+          <p class="mx-auto mt-8 max-w-2xl text-base leading-8 text-[#c5bed2] sm:text-lg lg:mx-0">
+            Starte auf unserem einzigartigen SMP-Server und werde Teil des nächsten großen Minecraft-Netzwerks. Baue dein Imperium, kämpfe um deine Herzen und schreibe deine eigene Geschichte.
+          </p>
+          <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row lg:justify-start">
+            <a href="#server" class="btn-primary inline-flex items-center justify-center gap-2 rounded-xl px-7 py-4 font-extrabold">
+              Jetzt entdecken <span aria-hidden="true">↓</span>
+            </a>
+            <a href="#ueber-uns" class="inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/[.04] px-7 py-4 font-bold text-white transition hover:border-purple-300/50 hover:bg-white/[.07]">
+              Das ist Fusion MC
+            </a>
+            <a href="https://discord.gg/5kWAM6RYW6" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-xl border border-purple-300/25 bg-purple-500/10 px-7 py-4 font-bold text-purple-100 transition hover:border-purple-300/50 hover:bg-purple-500/20">
+              Discord beitreten <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+          <div class="mt-9 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-xs font-semibold text-white/50 lg:justify-start">
+            <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-purple-400"></span> SMP im Fokus</span>
+            <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-purple-400"></span> Community first</span>
+            <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-purple-400"></span> Mehr in Planung</span>
+          </div>
+        </div>
+
+        <div class="relative mx-auto w-full max-w-xl">
+          <div class="absolute inset-8 rounded-[40px] bg-purple-600/20 blur-3xl"></div>
+          <div class="glass relative rounded-[2rem] p-4 shadow-neon sm:p-6">
+            <div class="overflow-hidden rounded-[1.5rem] border border-purple-300/15 bg-[#100b1a]">
+              <div class="relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-gradient-to-br from-[#2b1450] via-[#171027] to-[#08070d]">
+                <div class="absolute inset-0 opacity-50" style="background:radial-gradient(circle at 50% 38%,rgba(177,83,255,.45),transparent 34%),linear-gradient(130deg,transparent 30%,rgba(160,32,240,.16) 50%,transparent 70%)"></div>
+                <div class="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/80 to-transparent"></div>
+                <svg class="relative z-10 w-[88%] max-w-[420px] drop-shadow-[0_20px_45px_rgba(160,32,240,.35)]" viewBox="0 0 480 330" role="img" aria-label="Abstrakte violette Würfel-Landschaft als Minecraft-inspirierte Illustration">
+                  <defs><linearGradient id="cubeTop" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d9a4ff"/><stop offset="1" stop-color="#8237d0"/></linearGradient><linearGradient id="cubeLeft" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#7425b5"/><stop offset="1" stop-color="#341253"/></linearGradient><linearGradient id="cubeRight" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#57218a"/><stop offset="1" stop-color="#1c102c"/></linearGradient></defs>
+                  <g stroke="#d7a5ff" stroke-opacity=".32" stroke-width="1.4">
+                    <g transform="translate(20 102)"><path d="M0 55 64 20 128 55 64 91Z" fill="url(#cubeTop)"/><path d="M0 55 64 91 64 170 0 132Z" fill="url(#cubeLeft)"/><path d="M64 91 128 55 128 132 64 170Z" fill="url(#cubeRight)"/></g>
+                    <g transform="translate(174 28)"><path d="M0 65 73 24 146 65 73 107Z" fill="url(#cubeTop)"/><path d="M0 65 73 107 73 196 0 153Z" fill="url(#cubeLeft)"/><path d="M73 107 146 65 146 153 73 196Z" fill="url(#cubeRight)"/></g>
+                    <g transform="translate(306 130)"><path d="M0 42 52 12 104 42 52 72Z" fill="url(#cubeTop)"/><path d="M0 42 52 72 52 135 0 104Z" fill="url(#cubeLeft)"/><path d="M52 72 104 42 104 104 52 135Z" fill="url(#cubeRight)"/></g>
+                    <g transform="translate(120 182)"><path d="M0 28 46 2 92 28 46 55Z" fill="url(#cubeTop)"/><path d="M0 28 46 55 46 110 0 83Z" fill="url(#cubeLeft)"/><path d="M46 55 92 28 92 83 46 110Z" fill="url(#cubeRight)"/></g>
+                  </g>
+                  <path d="M32 277H444" stroke="#bb75ff" stroke-opacity=".45" stroke-dasharray="4 9"/>
+                  <circle cx="238" cy="72" r="4" fill="#fff" opacity=".9"/><circle cx="372" cy="70" r="2.5" fill="#d9a4ff"/><circle cx="112" cy="40" r="3" fill="#fff" opacity=".7"/>
+                </svg>
+                <div class="absolute bottom-5 left-5 right-5 flex items-end justify-between">
+                  <div><p class="text-[10px] font-extrabold uppercase tracking-[.28em] text-purple-200">FUSION NETWORK</p><p class="mt-1 text-xl font-black sm:text-2xl">Deine Welt. Deine Regeln.</p></div>
+                  <span class="rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-white/70">SMP</span>
+                </div>
+              </div>
+              <div class="grid grid-cols-3 divide-x divide-white/10 border-t border-white/10 bg-black/20">
+                <div class="p-4 text-center"><p class="text-lg font-black text-white">SMP</p><p class="mt-1 text-[10px] font-bold uppercase tracking-wider text-white/40">Dein Abenteuer</p></div>
+                <div class="p-4 text-center"><p class="text-lg font-black text-fuchsia-300">PvP</p><p class="mt-1 text-[10px] font-bold uppercase tracking-wider text-white/40">Dein Kampf</p></div>
+                <div class="p-4 text-center"><p class="text-lg font-black text-white">∞</p><p class="mt-1 text-[10px] font-bold uppercase tracking-wider text-white/40">Deine Ideen</p></div>
+              </div>
+            </div>
+            <div class="absolute -right-3 top-10 hidden rounded-2xl border border-purple-300/20 bg-[#171025]/90 p-3 shadow-neon sm:block">
+              <div class="flex items-center gap-3"><span class="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-500/15 text-xl">✦</span><div><p class="text-xs font-extrabold">NEXT LEVEL</p><p class="text-[10px] text-white/45">Wird gemeinsam gebaut</p></div></div>
+            </div>
+          </div>
+          <div class="absolute -bottom-5 -left-3 hidden h-16 w-16 rounded-2xl border border-purple-300/20 bg-[#1a1028] shadow-neon sm:block"><div class="flex h-full items-center justify-center text-2xl text-purple-300">✧</div></div>
+        </div>
+      </div>
+      <div class="absolute bottom-0 left-0 right-0 section-line"></div>
+    </section>
+
+    <section id="server" class="relative px-5 py-10 sm:px-8 sm:py-14">
+      <div class="reveal mx-auto max-w-5xl">
+        <div class="glass rounded-3xl p-5 shadow-neon sm:p-8">
+          <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <p class="section-kicker">Verbinde dich mit uns</p>
+              <h2 class="mt-2 text-2xl font-black sm:text-3xl">Dein Abenteuer wartet.</h2>
+              <p class="mt-2 text-sm text-white/50">Speichere die IP und sei bereit für den Launch.</p>
+            </div>
+            <div class="flex flex-col gap-3 sm:flex-row">
+              <div class="ip-box flex min-w-0 items-center gap-3 rounded-xl px-4 py-3 sm:min-w-[280px]">
+                <span class="text-xl text-purple-300">⌘</span>
+                <div class="min-w-0"><p class="text-[9px] font-extrabold uppercase tracking-[.2em] text-white/40">Minecraft Server-IP</p><p id="server-ip" class="mt-1 break-all font-mono text-base font-bold sm:text-lg">play.fusionmc.net</p></div>
+              </div>
+              <button id="copy-ip" class="btn-primary inline-flex items-center justify-center gap-2 rounded-xl px-5 py-4 text-sm font-extrabold" type="button">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>
+                <span id="copy-label">IP kopieren</span>
+              </button>
+            </div>
+          </div>
+          <div class="mt-5 rounded-2xl border border-purple-300/15 bg-black/20 p-4 sm:p-5">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div><p class="text-xs font-extrabold uppercase tracking-[.2em] text-purple-200">Launch Countdown</p><p class="mt-1 text-sm text-white/45">Der Countdown läuft bis zum geplanten Start.</p></div>
+              <div id="countdown" class="grid grid-cols-4 gap-2 sm:gap-3" aria-label="Zeit bis zum Server-Launch">
+                <div class="countdown-box"><span id="count-days">07</span><small>Tage</small></div>
+                <div class="countdown-box"><span id="count-hours">00</span><small>Stunden</small></div>
+                <div class="countdown-box"><span id="count-minutes">00</span><small>Minuten</small></div>
+                <div class="countdown-box"><span id="count-seconds">00</span><small>Sekunden</small></div>
+              </div>
+            </div>
+          </div>
+          <div class="mt-6 flex flex-col gap-4 border-t border-white/10 pt-5 sm:flex-row sm:items-center sm:justify-between">
+            <div class="flex items-center gap-3"><span id="server-status-dot" class="status-dot" style="background:#a855f7"></span><div><p id="server-status" class="text-sm font-bold">Serverstatus wird geprüft …</p><p id="server-version" class="mt-1 text-xs text-white/40">Verbinde mit der Minecraft-Status-API …</p></div></div>
+            <div class="rounded-lg border border-white/10 bg-white/[.03] px-4 py-2 text-xs font-bold text-white/55"><span id="player-count" class="text-purple-300">Wird geprüft</span> Spieler online</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="ueber-uns" class="px-5 py-24 sm:px-8 sm:py-32">
+      <div class="mx-auto max-w-7xl">
+        <div class="reveal mx-auto max-w-3xl text-center">
+          <p class="section-kicker">Mehr als nur ein Server</p>
+          <h2 class="section-title mt-4 text-4xl font-black sm:text-5xl">Die Welt von <span class="gradient-text">Fusion MC</span></h2>
+          <p class="mx-auto mt-6 max-w-3xl text-base leading-8 text-white/60">Fusion MC entsteht aus einer einfachen Idee: Minecraft soll sich wieder wie ein echtes Abenteuer anfühlen – mit einer Welt, die du mitgestaltest, Entscheidungen, die etwas bedeuten, und einer Community, die aus Mitspielern echte Weggefährten macht. Unser SMP ist der erste große Schritt auf diesem Weg.</p>
+        </div>
+        <div class="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+          <article class="feature-card reveal rounded-2xl p-6"><div class="icon-tile flex h-14 w-14 items-center justify-center rounded-2xl text-2xl">🌲</div><h3 class="mt-6 text-xl font-extrabold">Überleben mit Bedeutung</h3><p class="mt-3 text-sm leading-7 text-white/55">Sammle Ressourcen, erkunde die Welt, stelle dich Gefahren und entwickle deinen eigenen Spielstil. Ob du klein anfängst oder große Pläne schmiedest – dein Fortschritt entsteht durch deine Entscheidungen.</p></article>
+          <article class="feature-card reveal rounded-2xl p-6" style="transition-delay:70ms"><div class="icon-tile flex h-14 w-14 items-center justify-center rounded-2xl text-2xl">🏡</div><h3 class="mt-6 text-xl font-extrabold">Aufbauen & Claims</h3><p class="mt-3 text-sm leading-7 text-white/55">Mach aus einem Stück Land dein Zuhause. Mit dem Claiming-Konzept sollst du deinen Baufortschritt schützen, deine Basis gestalten und langfristige Projekte verwirklichen können, ohne ständig um deine Arbeit bangen zu müssen.</p></article>
+          <article class="feature-card reveal rounded-2xl p-6" style="transition-delay:140ms"><div class="icon-tile flex h-14 w-14 items-center justify-center rounded-2xl text-2xl">❤️</div><h3 class="mt-6 text-xl font-extrabold">Lifesteal & Spannung</h3><p class="mt-3 text-sm leading-7 text-white/55">Lifesteal bringt Risiko und Strategie ins Spiel: Kämpfe wollen überlegt sein, Verbündete können entscheidend werden und jeder Konflikt kann eine Geschichte schreiben. Stärke, Timing und Fairplay zählen.</p></article>
+          <article class="feature-card reveal rounded-2xl p-6" style="transition-delay:210ms"><div class="icon-tile flex h-14 w-14 items-center justify-center rounded-2xl text-2xl">🤝</div><h3 class="mt-6 text-xl font-extrabold">Eine Community, die mitwächst</h3><p class="mt-3 text-sm leading-7 text-white/55">Gemeinsame Projekte, Handel, Allianzen und Rivalitäten sollen die Welt lebendig machen. Fusion MC soll nicht nur ein Ort zum Spielen sein, sondern eine Community, an der Ideen, Feedback und gegenseitiger Respekt ihren Platz haben.</p></article>
+        </div>
+        <div class="reveal mt-8 rounded-3xl border border-purple-300/15 bg-gradient-to-r from-purple-950/50 via-[#171021] to-fuchsia-950/20 p-7 sm:p-9">
+          <p class="section-kicker">Das ist erst der Anfang</p><h3 class="mt-3 text-2xl font-black sm:text-3xl">Vom SMP zu einem großen <span class="gradient-text">Minecraft-Netzwerk.</span></h3>
+          <p class="mt-4 max-w-4xl text-sm leading-7 text-white/55">Wir wollen Schritt für Schritt eine Plattform aufbauen, auf der unterschiedliche Spielideen zusammenfinden und die Spieler langfristig etwas entdecken können. Der SMP bildet das Fundament: Wir möchten Systeme verbessern, neue Ideen sorgfältig entwickeln und das Netzwerk gemeinsam mit der Community wachsen lassen. Fusion MC ist ein Anfang mit großen Ambitionen – und die Geschichte wird von den Menschen geschrieben, die Teil davon werden.</p>
+        </div>
+      </div>
+    </section>
+
+
+
+
+    <section id="shop" class="relative overflow-hidden px-5 py-20 sm:px-8 sm:py-24">
+      <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(139,92,246,.15),transparent_55%)]"></div>
+      <div class="relative mx-auto max-w-7xl">
+        <div class="reveal mx-auto max-w-3xl text-center">
+          <p class="section-kicker">Unterstütze das Netzwerk</p>
+          <h2 class="section-title mt-4 text-4xl font-black sm:text-5xl">Der Fusion <span class="gradient-text">Shop</span></h2>
+          <p class="mt-5 text-sm leading-7 text-white/55">Wähle den Rang, der zu deinem Abenteuer passt. Die hier gezeigten Pakete sind Beispielangebote. Der Kauf wird aktuell über Discord angefragt; ein automatisierter Checkout ist noch nicht eingerichtet.</p>
+        </div>
+        <div class="mt-12 grid items-stretch gap-6 lg:grid-cols-3">
+          <article class="feature-card reveal flex flex-col rounded-3xl p-7 sm:p-8">
+            <div class="flex items-center justify-between gap-3"><span class="rounded-full border border-purple-300/20 bg-purple-500/10 px-3 py-1 text-xs font-extrabold uppercase tracking-[.16em] text-purple-200">Einsteiger</span><span class="text-2xl">✦</span></div>
+            <h3 class="mt-6 text-2xl font-black">VIP <span class="text-purple-300">Rang</span></h3>
+            <p class="mt-2 text-sm leading-6 text-white/50">Kleine Extras für deinen Alltag auf Fusion MC.</p>
+            <div class="mt-6 flex items-end gap-2"><span class="text-4xl font-black">4,99 €</span><span class="pb-1 text-xs text-white/40">Beispielpreis</span></div>
+            <div class="my-6 h-px bg-white/10"></div>
+            <ul class="flex-1 space-y-3 text-sm text-white/70"><li>✓ VIP-Chatfarbe und Rang-Prefix</li><li>✓ Zusätzliche Homes</li><li>✓ /fly in dafür freigegebenen Lobbys</li><li>✓ VIP-Erkennungsmerkmale</li></ul>
+            <a href="https://discord.gg/5kWAM6RYW6" target="_blank" rel="noopener noreferrer" class="btn-primary mt-8 inline-flex items-center justify-center rounded-xl px-5 py-4 text-sm font-extrabold">Jetzt kaufen <span class="ml-2">↗</span></a>
+          </article>
+          <article class="feature-card reveal flex flex-col rounded-3xl p-7 sm:p-8">
+            <div class="flex items-center justify-between gap-3"><span class="rounded-full border border-fuchsia-300/20 bg-fuchsia-500/10 px-3 py-1 text-xs font-extrabold uppercase tracking-[.16em] text-fuchsia-200">Mehr Extras</span><span class="text-2xl">✧</span></div>
+            <h3 class="mt-6 text-2xl font-black">Fusion <span class="text-fuchsia-300">Premium Rang</span></h3>
+            <p class="mt-2 text-sm leading-6 text-white/50">Mehr Möglichkeiten für Builder, Sammler und Stammspieler.</p>
+            <div class="mt-6 flex items-end gap-2"><span class="text-4xl font-black">9,99 €</span><span class="pb-1 text-xs text-white/40">Beispielpreis</span></div>
+            <div class="my-6 h-px bg-white/10"></div>
+            <ul class="flex-1 space-y-3 text-sm text-white/70"><li>✓ Alle VIP-Vorteile</li><li>✓ Farbige Schilder, sofern unterstützt</li><li>✓ Exklusive kosmetische Extras</li><li>✓ Erweitertes Claim-Kontingent, sofern aktiviert</li></ul>
+            <a href="https://discord.gg/5kWAM6RYW6" target="_blank" rel="noopener noreferrer" class="mt-8 inline-flex items-center justify-center rounded-xl border border-purple-300/30 bg-purple-500/10 px-5 py-4 text-sm font-extrabold text-purple-100 transition hover:bg-purple-500/20">Jetzt kaufen <span class="ml-2">↗</span></a>
+          </article>
+          <article class="reveal relative flex flex-col rounded-3xl border border-fuchsia-300/50 bg-gradient-to-b from-purple-900/50 via-[#171020] to-[#100b18] p-7 shadow-[0_0_45px_rgba(168,85,247,.2)] sm:p-8">
+            <div class="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-gradient-to-r from-fuchsia-500 to-violet-500 px-4 py-1.5 text-[10px] font-black uppercase tracking-[.15em] text-white shadow-lg">Beliebtester Rang · Best Value</div>
+            <div class="mt-2 flex items-center justify-between gap-3"><span class="rounded-full border border-fuchsia-200/25 bg-fuchsia-400/10 px-3 py-1 text-xs font-extrabold uppercase tracking-[.16em] text-fuchsia-100">Ultimatives Paket</span><span class="text-2xl text-fuchsia-200">✦</span></div>
+            <h3 class="mt-6 text-2xl font-black">FUSION<span class="text-fuchsia-300">+</span></h3>
+            <p class="mt-2 text-sm leading-6 text-white/55">Für alle, die Fusion besonders unterstützen möchten.</p>
+            <div class="mt-6 flex items-end gap-2"><span class="text-4xl font-black">19,99 €</span><span class="pb-1 text-xs text-white/40">Beispielpreis</span></div>
+            <div class="my-6 h-px bg-white/10"></div>
+            <ul class="flex-1 space-y-3 text-sm text-white/75"><li>✓ Alle VIP- und Premium-Vorteile</li><li>✓ Leuchtender lila Prefix, sofern unterstützt</li><li>✓ Join-Priorität, sofern technisch aktiviert</li><li>✓ Zusätzliche kosmetische Perks</li><li>✓ Größeres Claim-Kontingent, sofern aktiviert</li></ul>
+            <a href="https://discord.gg/5kWAM6RYW6" target="_blank" rel="noopener noreferrer" class="btn-primary mt-8 inline-flex items-center justify-center rounded-xl px-5 py-4 text-sm font-extrabold shadow-neon">Jetzt kaufen <span class="ml-2">↗</span></a>
+          </article>
+        </div>
+        <p class="mx-auto mt-7 max-w-4xl text-center text-xs leading-6 text-white/35">Hinweis: Preise und Vorteile sind Beispielangaben und müssen vor Verkaufsstart bestätigt werden. Kaufe nur über offizielle, vom Serverteam bestätigte Wege. Kosmetische und spielerische Vorteile müssen mit den Serverregeln und den geltenden Plattformbedingungen vereinbar sein.</p>
+      </div>
+    </section>
+
+    <section id="regelwerk" class="px-5 py-20 sm:px-8 sm:py-24">
+      <div class="mx-auto max-w-5xl">
+        <div class="reveal mx-auto max-w-3xl text-center"><p class="section-kicker">Gemeinsam fair bleiben</p><h2 class="section-title mt-4 text-4xl font-black sm:text-5xl">Das <span class="gradient-text">Regelwerk</span></h2><p class="mt-5 text-sm leading-7 text-white/55">Diese Regeln sollen ein faires, sicheres und langfristig angenehmes Spielerlebnis für alle ermöglichen. Mit dem Spielen auf Fusion MC akzeptierst du die Serverregeln. Das Team kann bei Verstößen angemessene Maßnahmen ergreifen; schwere oder wiederholte Verstöße können zu längeren Sperren führen.</p></div>
+        <div class="mt-10 grid gap-4">
+          <details class="feature-card reveal rounded-2xl p-5 sm:p-6" open><summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-extrabold"><span><span class="mr-3 text-purple-300">§1</span> Allgemeines Verhalten & Respekt</span><span class="text-xl text-purple-300">＋</span></summary><div class="mt-4 space-y-3 border-t border-white/10 pt-4 text-sm leading-7 text-white/60"><p>Behandle alle Spieler, Teammitglieder und Community-Mitglieder respektvoll. Beleidigungen, gezielte Provokationen, Mobbing, Drohungen und Belästigung sind verboten.</p><p>Diskriminierung oder Hass aufgrund persönlicher Merkmale ist nicht erlaubt. Veröffentliche keine privaten Informationen anderer Personen und respektiere deren Privatsphäre.</p><p>Folge nachvollziehbaren Anweisungen des Teams. Wenn du eine Entscheidung für falsch hältst, kläre sie ruhig über den vorgesehenen Supportweg statt im öffentlichen Chat zu eskalieren.</p></div></details>
+          <details class="feature-card reveal rounded-2xl p-5 sm:p-6"><summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-extrabold"><span><span class="mr-3 text-purple-300">§2</span> Gameplay, Griefing & Claims</span><span class="text-xl text-purple-300">＋</span></summary><div class="mt-4 space-y-3 border-t border-white/10 pt-4 text-sm leading-7 text-white/60"><p>Griefing ist verboten: Zerstöre, verändere oder beschädige keine fremden Bauwerke, Farmen, Lager oder Landschaften ohne ausdrückliche Erlaubnis der Berechtigten.</p><p>Respektiere Claims und Grundstücksgrenzen. Betritt geschützte Bereiche nicht mit dem Ziel, andere zu stören, Gegenstände zu entwenden oder Schutzmechanismen zu umgehen. Nutze keine Fehler im Claim-System aus.</p><p>Stehlen, Täuschung bei vereinbarten Trades, unerlaubtes Plündern und das absichtliche Sabotieren gemeinsamer Projekte sind verboten. Vereinbarungen sollten für alle Beteiligten klar sein.</p><p>Baue keine unangemessenen, beleidigenden oder absichtlich störenden Konstruktionen. Vermeide übermäßige Redstone- oder Mob-Anlagen, die Serverleistung oder das Spielerlebnis anderer beeinträchtigen.</p></div></details>
+          <details class="feature-card reveal rounded-2xl p-5 sm:p-6"><summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-extrabold"><span><span class="mr-3 text-purple-300">§3</span> PvP, Lifesteal & Fairplay</span><span class="text-xl text-purple-300">＋</span></summary><div class="mt-4 space-y-3 border-t border-white/10 pt-4 text-sm leading-7 text-white/60"><p>Spiele fair und nutze ausschließlich erlaubte Spielmechaniken. Unfaire Vorteile durch Bugs, unerlaubte Hilfsmittel oder abgesprochene Manipulationen sind verboten.</p><p>Im PvP gilt: keine unerlaubten Combat-Logs, keine Ausnutzung von Safezones oder Claims, um laufende Kämpfe unfair zu beeinflussen, und kein absichtliches Ausnutzen von Fehlern bei Lifesteal-Mechaniken.</p><p>Absprachen, Farmen oder Mehrfachaccount-Konstruktionen, die das Lifesteal-System oder Ranglisten künstlich manipulieren, können bestraft werden. Beachte zusätzlich die jeweils im Spiel veröffentlichten Details zu PvP und Events.</p></div></details>
+          <details class="feature-card reveal rounded-2xl p-5 sm:p-6"><summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-extrabold"><span><span class="mr-3 text-purple-300">§4</span> Chat, Namen & Werbung</span><span class="text-xl text-purple-300">＋</span></summary><div class="mt-4 space-y-3 border-t border-white/10 pt-4 text-sm leading-7 text-white/60"><p>Spam, Flooding, übermäßige Großschreibung, absichtliches Umgehen des Chats und das Stören laufender Gespräche sind zu unterlassen.</p><p>Verboten sind beleidigende, diskriminierende, sexuelle, extremistische oder anderweitig unangemessene Chatnachrichten, Namen, Skins und Schilder. Das gilt auch für verschleierte Schreibweisen und Umgehungsversuche.</p><p>Werbung für fremde Server, Dienste oder Communities ist ohne ausdrückliche Genehmigung nicht erlaubt. Teile keine verdächtigen Links, Phishing-Seiten oder Dateien, die anderen schaden könnten.</p></div></details>
+          <details class="feature-card reveal rounded-2xl p-5 sm:p-6"><summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-extrabold"><span><span class="mr-3 text-purple-300">§5</span> Cheats, Mods & Exploits</span><span class="text-xl text-purple-300">＋</span></summary><div class="mt-4 space-y-3 border-t border-white/10 pt-4 text-sm leading-7 text-white/60"><p>Hacks, Cheats, X-Ray, KillAura, Fly, Speed, automatisierte Kampf-Hilfen, unerlaubte Makros und andere Hilfsmittel, die einen unfairen Vorteil verschaffen, sind verboten.</p><p>Nutze keine Bugs, Duplikationsfehler oder Exploits, um Items, Herzen, Geld, Rechte oder andere Vorteile zu erhalten. Melde Fehler dem Team und verbreite keine Anleitung zu ihrer Ausnutzung.</p><p>Erlaubte Client-Modifikationen müssen rein kosmetisch oder ausdrücklich zugelassen sein. Wenn du unsicher bist, frage vor der Nutzung beim Team nach.</p></div></details>
+          <details class="feature-card reveal rounded-2xl p-5 sm:p-6"><summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-extrabold"><span><span class="mr-3 text-purple-300">§6</span> Account-Sicherheit & Mehrfachaccounts</span><span class="text-xl text-purple-300">＋</span></summary><div class="mt-4 space-y-3 border-t border-white/10 pt-4 text-sm leading-7 text-white/60"><p>Du bist für die Aktivitäten über deinen Account verantwortlich. Teile keine Zugangsdaten und verwende sichere, einzigartige Passwörter.</p><p>Umgehung von Banns, Strafen oder Beschränkungen über alternative Accounts ist verboten. Mehrfachaccounts dürfen nicht zum Farmen, zur Manipulation von Systemen oder zur Umgehung von Limits verwendet werden.</p><p>Gib dich nicht als Teammitglied oder andere Person aus. Versuche nicht, Rechte, Zugangsdaten oder vertrauliche Informationen durch Täuschung zu erlangen.</p></div></details>
+          <details class="feature-card reveal rounded-2xl p-5 sm:p-6"><summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-extrabold"><span><span class="mr-3 text-purple-300">07</span> Handel, Items & Wirtschaft</span><span class="text-xl text-purple-300">＋</span></summary><div class="mt-4 space-y-3 border-t border-white/10 pt-4 text-sm leading-7 text-white/60"><p>Halte Handelsabsprachen ein und täusche andere nicht absichtlich über Preis, Inhalt oder Zustand eines Angebots. Nutze keine Fehler in Shops, Währungen oder Belohnungssystemen aus.</p><p>Der Verkauf oder Tausch von Accounts, Echtgeldhandel sowie Handel mit unrechtmäßig erlangten Gegenständen ist ohne ausdrückliche Genehmigung verboten.</p><p>Melde verdächtige Transaktionen oder versehentlich erhaltene Duplikate dem Team. Versuche nicht, solche Gegenstände zu verstecken oder weiterzugeben.</p></div></details>
+          <details class="feature-card reveal rounded-2xl p-5 sm:p-6"><summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-extrabold"><span><span class="mr-3 text-purple-300">§8</span> Meldungen & Konsequenzen</span><span class="text-xl text-purple-300">＋</span></summary><div class="mt-4 space-y-3 border-t border-white/10 pt-4 text-sm leading-7 text-white/60"><p>Melde Regelverstöße möglichst mit nachvollziehbaren Informationen und Belegen. Erfinde keine Anschuldigungen und manipuliere keine Beweise.</p><p>Je nach Schwere und Häufigkeit können Verwarnungen, Chat-Mutes, temporäre Sperren, Rücksetzungen oder permanente Banns folgen. Schwere Verstöße können auch ohne vorherige Verwarnung geahndet werden.</p><p>Das Team bewertet Situationen im Kontext und kann bei nicht ausdrücklich genannten Fällen eingreifen, wenn Verhalten anderen schadet oder die Integrität des Servers gefährdet. Entscheidungen können über den vorgesehenen Supportweg sachlich angefragt werden.</p></div></details>
+          <div class="rounded-2xl border border-purple-300/15 bg-purple-500/[.06] p-5 text-xs leading-6 text-white/45"><strong class="text-purple-200">Hinweis:</strong> Dieses Regelwerk ist eine ausführliche Website-Fassung. Vor dem offiziellen Start sollten die Regeln mit den tatsächlich aktivierten Plugins, Claim-/PvP-Einstellungen und den Abläufen des Fusion-MC-Teams abgeglichen werden.</div>
+        </div>
+      </div>
+    </section>
+
+
+
+    <section id="community" class="px-5 py-16 sm:px-8 sm:py-20">
+      <div class="mx-auto max-w-7xl"><div class="relative overflow-hidden rounded-[2rem] border border-purple-300/20 bg-gradient-to-br from-[#32124b] via-[#1b102b] to-[#120d1c] px-6 py-12 shadow-neon sm:px-12 sm:py-16">
+        <div class="absolute -right-16 -top-24 h-80 w-80 rounded-full bg-fuchsia-500/20 blur-3xl"></div><div class="absolute -bottom-28 left-1/3 h-64 w-64 rounded-full bg-violet-700/20 blur-3xl"></div>
+        <div class="relative grid gap-10 lg:grid-cols-[1fr_.8fr] lg:items-center"><div><p class="section-kicker">Werde Teil der Community</p><h2 class="mt-4 text-4xl font-black leading-tight sm:text-5xl">Deine Geschichte bei Fusion MC <span class="gradient-text">beginnt hier.</span></h2><p class="mt-5 max-w-xl text-sm leading-7 text-white/60">Lerne andere Spieler kennen, teile deine Ideen und begleite den Aufbau unseres SMP und des zukünftigen Netzwerks.</p><div class="mt-8 flex flex-col gap-3 sm:flex-row"><a href="https://discord.gg/5kWAM6RYW6" target="_blank" rel="noopener noreferrer" class="btn-primary inline-flex items-center justify-center gap-2 rounded-xl px-6 py-4 font-extrabold">Discord beitreten <span aria-hidden="true">↗</span></a><a href="https://www.youtube.com/@fusionmc_minecraft" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/[.04] px-6 py-4 font-bold hover:bg-white/[.08]">▶ Neuestes Video ansehen</a></div></div>
+          <div class="grid gap-4"><a href="https://discord.gg/5kWAM6RYW6" target="_blank" rel="noopener noreferrer" class="social-card flex items-center gap-4 rounded-2xl p-5"><span class="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-indigo-500/15 text-2xl">◉</span><span><span class="block font-extrabold">Fusion MC Discord</span><span class="mt-1 block text-xs text-white/45">Community, Austausch & Support</span></span><span class="ml-auto text-xl text-purple-300">↗</span></a><a href="https://www.youtube.com/@fusionmc_minecraft" target="_blank" rel="noopener noreferrer" class="social-card flex items-center gap-4 rounded-2xl p-5"><span class="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-red-500/10 text-2xl">▶</span><span><span class="block font-extrabold">Fusion MC Network</span><span class="mt-1 block text-xs text-white/45">Videos & Einblicke</span></span><span class="ml-auto text-xl text-purple-300">↗</span></a></div>
+        </div></div></div>
+    </section>
+  </main>
+
+  <footer class="mt-10 border-t border-white/8 bg-[#09070e]/70 px-5 pb-8 pt-12 sm:px-8">
+    <div class="mx-auto max-w-7xl">
+      <div class="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
+        <div><a href="#start" class="inline-flex items-center gap-3" aria-label="Fusion MC Startseite"><span class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-fuchsia-500 to-violet-800 text-xl font-black shadow-neon">F</span><span class="text-lg font-black">FUSION <span class="text-fuchsia-400">MC</span></span></a><p class="mt-4 max-w-sm text-sm leading-7 text-white/45">Kombiniere deine Welt. Ein SMP heute – die Grundlage für ein großes Minecraft-Netzwerk von morgen.</p></div>
+        <nav aria-label="Footernavigation" class="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-white/55"><a class="hover:text-white" href="#start">Startseite</a><a class="hover:text-white" href="#ueber-uns">Über uns</a><a class="hover:text-white" href="#shop">Shop</a><a class="hover:text-white" href="#regelwerk">Regelwerk</a><a class="btn-primary inline-flex items-center gap-2 rounded-xl px-4 py-3 font-extrabold" href="https://discord.gg/5kWAM6RYW6" target="_blank" rel="noopener noreferrer">Discord ↗</a><a class="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/[.04] px-4 py-3 font-extrabold text-white hover:bg-white/[.08]" href="https://www.youtube.com/@fusionmc_minecraft" target="_blank" rel="noopener noreferrer">▶ YouTube ↗</a></nav>
+      </div>
+      <div class="mt-8 section-line"></div><div class="flex flex-col gap-3 pt-6 text-xs text-white/35 sm:flex-row sm:items-center sm:justify-between"><p>© <span id="year">2026</span> Fusion MC. All rights reserved.</p><p>Unabhängiges Minecraft-Netzwerk · Nicht mit Mojang oder Microsoft verbunden.</p></div>
+    </div>
+  </footer>
+
+  <div id="toast" class="toast fixed bottom-6 left-1/2 z-[100] flex items-center gap-3 rounded-xl border border-purple-300/25 bg-[#1b1128] px-5 py-3 text-sm font-bold shadow-neon" role="status" aria-live="polite">
+    <span class="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-300">✓</span><span id="toast-message">IP kopiert!</span>
+  </div>
+
+  <script>
+    (() => {
+      'use strict';
+
+      const ip = 'play.fusionmc.net';
+      const copyButton = document.getElementById('copy-ip');
+      const copyLabel = document.getElementById('copy-label');
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toast-message');
+      let toastTimer;
+
+      function showToast(message) {
+        toastMessage.textContent = message;
+        toast.classList.add('show');
+        window.clearTimeout(toastTimer);
+        toastTimer = window.setTimeout(() => toast.classList.remove('show'), 2400);
+      }
+
+      async function copyIp() {
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(ip);
+          } else {
+            const field = document.createElement('textarea');
+            field.value = ip;
+            field.setAttribute('readonly', '');
+            field.style.position = 'fixed';
+            field.style.opacity = '0';
+            field.style.pointerEvents = 'none';
+            document.body.appendChild(field);
+            field.select();
+            const copied = document.execCommand('copy');
+            field.remove();
+            if (!copied) throw new Error('Kopieren nicht möglich');
+          }
+          copyLabel.textContent = 'Kopiert! ✓';
+          showToast('Server-IP wurde kopiert!');
+          window.setTimeout(() => { copyLabel.textContent = 'IP kopieren'; }, 2200);
+        } catch (error) {
+          showToast('Kopieren nicht möglich – IP: ' + ip);
+        }
+      }
+      copyButton.addEventListener('click', copyIp);
+
+
+      document.querySelectorAll('#regelwerk details').forEach(details => {
+        const icon = details.querySelector('summary span:last-child');
+        const updateIcon = () => { if (icon) icon.textContent = details.open ? '−' : '＋'; };
+        updateIcon();
+        details.addEventListener('toggle', updateIcon);
+      });
+      const yearElement = document.getElementById('year');
+      if (yearElement) yearElement.textContent = new Date().getFullYear();
+
+      // Konfiguration: Hostname, Wartungsmodus und Launch-Zeit hier anpassen.
+      const SERVER_HOST = 'play.fusionmc.net';
+      const SERVER_API_URL = `https://api.mcsrvstat.us/3/${encodeURIComponent(SERVER_HOST)}`;
+      const MAINTENANCE_MODE = false;
+      const LAUNCH_DATE = new Date('2026-10-22T18:00:00+02:00'); // Geplanter Launch: 22.10.2026, 18:00 Uhr deutscher Zeit
+      const statusText = document.getElementById('server-status');
+      const statusDot = document.getElementById('server-status-dot');
+      const versionText = document.getElementById('server-version');
+      const playerCount = document.getElementById('player-count');
+
+      async function refreshServerStatus() {
+        if (MAINTENANCE_MODE) {
+          statusText.textContent = 'Wartungsarbeiten';
+          versionText.textContent = 'Der Server ist vorübergehend im Wartungsmodus.';
+          playerCount.textContent = 'Wartung';
+          statusDot.style.background = '#ef4444';
+          statusDot.style.boxShadow = '0 0 14px rgba(239,68,68,.75)';
+          return;
+        }
+        try {
+          const response = await fetch(SERVER_API_URL, { cache: 'no-store', signal: AbortSignal.timeout(6500) });
+          if (!response.ok) throw new Error('Status-API antwortete mit ' + response.status);
+          const data = await response.json();
+          if (data.online) {
+            const online = Number(data.players?.online ?? 0);
+            const max = Number(data.players?.max ?? 500);
+            statusText.textContent = 'Server ist online!';
+            versionText.textContent = 'Minecraft ' + (data.version || 'Version wird nicht angegeben');
+            playerCount.textContent = `${online} / ${max}`;
+            statusDot.style.background = '#22c55e';
+            statusDot.style.boxShadow = '0 0 14px rgba(34,197,94,.75)';
+            statusDot.style.animation = 'pulse 1.8s infinite';
+          } else {
+            statusText.textContent = 'Server-Launch steht bevor!';
+            versionText.textContent = 'Der Server ist aktuell offline.';
+            playerCount.textContent = `0 / ${data.players?.max ?? 500}`;
+            statusDot.style.background = '#a855f7';
+            statusDot.style.boxShadow = '0 0 14px rgba(168,85,247,.65)';
+          }
+        } catch (error) {
+          statusText.textContent = 'Serverstatus gerade nicht verfügbar';
+          versionText.textContent = 'Die Status-API konnte nicht erreicht werden. Bitte später erneut versuchen.';
+          playerCount.textContent = '— / —';
+          statusDot.style.background = '#ef4444';
+          statusDot.style.boxShadow = '0 0 14px rgba(239,68,68,.65)';
+        }
+      }
+      refreshServerStatus();
+      window.setInterval(refreshServerStatus, 60000);
+
+      function updateCountdown() {
+        const remaining = LAUNCH_DATE.getTime() - Date.now();
+        if (remaining <= 0) {
+          ['days','hours','minutes','seconds'].forEach(unit => {
+            document.getElementById('count-' + unit).textContent = '00';
+          });
+          document.querySelector('#countdown').setAttribute('aria-label', 'Der geplante Launch-Zeitpunkt ist erreicht');
+          const label = document.querySelector('#countdown').previousElementSibling;
+          if (label) label.querySelector('p:last-child').textContent = 'Der geplante Launch-Zeitpunkt ist erreicht!';
+          return;
+        }
+        const days = Math.floor(remaining / 86400000);
+        const hours = Math.floor((remaining % 86400000) / 3600000);
+        const minutes = Math.floor((remaining % 3600000) / 60000);
+        const seconds = Math.floor((remaining % 60000) / 1000);
+        document.getElementById('count-days').textContent = String(days).padStart(2, '0');
+        document.getElementById('count-hours').textContent = String(hours).padStart(2, '0');
+        document.getElementById('count-minutes').textContent = String(minutes).padStart(2, '0');
+        document.getElementById('count-seconds').textContent = String(seconds).padStart(2, '0');
+      }
+      updateCountdown();
+      window.setInterval(updateCountdown, 1000);
+
+      // Easter Egg: drei schnelle Klicks auf das F-Logo.
+      const brandLink = document.querySelector('a[aria-label="Fusion MC Startseite"]');
+      let logoClicks = [];
+      let eggCooldown = false;
+      function launchConfetti() {
+        const colors = ['#A020F0', '#C084FC', '#E9D5FF', '#7C3AED', '#FFFFFF'];
+        for (let i = 0; i < 64; i++) {
+          const piece = document.createElement('span');
+          piece.className = 'confetti-piece';
+          piece.style.left = (Math.random() * 100) + 'vw';
+          piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+          piece.style.setProperty('--drift', ((Math.random() - .5) * 260) + 'px');
+          piece.style.animationDelay = (Math.random() * .25) + 's';
+          piece.style.transform = `rotate(${Math.random() * 360}deg)`;
+          document.body.appendChild(piece);
+          window.setTimeout(() => piece.remove(), 2300);
+        }
+      }
+      brandLink.addEventListener('click', event => {
+        const now = Date.now();
+        logoClicks = logoClicks.filter(time => now - time < 900);
+        logoClicks.push(now);
+        if (logoClicks.length >= 3 && !eggCooldown) {
+          event.preventDefault();
+          logoClicks = [];
+          eggCooldown = true;
+          launchConfetti();
+          showToast('Fusion MC to the Moon! 🚀');
+          window.setTimeout(() => { eggCooldown = false; }, 1800);
+        }
+      });
+
+      const menuToggle = document.getElementById('menu-toggle');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const menuIcon = document.getElementById('menu-icon');
+      function closeMenu() {
+        mobileMenu.classList.remove('open');
+        menuToggle.setAttribute('aria-expanded', 'false');
+        menuToggle.setAttribute('aria-label', 'Menü öffnen');
+        menuIcon.innerHTML = '<path d="M4 7h16M4 12h16M4 17h16"/>';
+      }
+      menuToggle.addEventListener('click', () => {
+        const isOpen = mobileMenu.classList.toggle('open');
+        menuToggle.setAttribute('aria-expanded', String(isOpen));
+        menuToggle.setAttribute('aria-label', isOpen ? 'Menü schließen' : 'Menü öffnen');
+        menuIcon.innerHTML = isOpen ? '<path d="m6 6 12 12M18 6 6 18"/>' : '<path d="M4 7h16M4 12h16M4 17h16"/>';
+      });
+      document.querySelectorAll('.mobile-link').forEach(link => link.addEventListener('click', closeMenu));
+      document.addEventListener('keydown', event => { if (event.key === 'Escape') closeMenu(); });
+      document.addEventListener('click', event => {
+        if (!mobileMenu.contains(event.target) && !menuToggle.contains(event.target)) closeMenu();
+      });
+
+      document.getElementById('year').textContent = new Date().getFullYear();
+
+      const revealItems = document.querySelectorAll('.reveal');
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries, currentObserver) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              currentObserver.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -30px 0px' });
+        revealItems.forEach(item => observer.observe(item));
+      } else {
+        revealItems.forEach(item => item.classList.add('is-visible'));
+      }
+
+      const canvas = document.getElementById('particles');
+      const ctx = canvas.getContext('2d');
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let particles = [];
+      let width = 0;
+      let height = 0;
+      let frameId = 0;
+      const particleCount = Math.min(75, Math.max(28, Math.floor(window.innerWidth / 20)));
+
+      function resizeCanvas() {
+        const ratio = Math.min(window.devicePixelRatio || 1, 2);
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = Math.floor(width * ratio);
+        canvas.height = Math.floor(height * ratio);
+        canvas.style.width = width + 'px';
+        canvas.style.height = height + 'px';
+        ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+        particles = Array.from({ length: particleCount }, () => ({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          radius: Math.random() * 1.7 + .35,
+          speed: Math.random() * .24 + .06,
+          alpha: Math.random() * .55 + .15,
+          drift: (Math.random() - .5) * .18
+        }));
+        drawParticles(false);
+      }
+
+      function drawParticles(animate = true) {
+        ctx.clearRect(0, 0, width, height);
+        for (const p of particles) {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(205,153,255,${p.alpha})`;
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = 'rgba(160,32,240,.6)';
+          ctx.fill();
+          if (animate) {
+            p.y -= p.speed;
+            p.x += p.drift;
+            if (p.y < -5) { p.y = height + 5; p.x = Math.random() * width; }
+            if (p.x < -5) p.x = width + 5;
+            if (p.x > width + 5) p.x = -5;
+          }
+        }
+        ctx.shadowBlur = 0;
+        if (animate && !document.hidden && !reducedMotion) frameId = requestAnimationFrame(() => drawParticles(true));
+      }
+
+      function stopParticles() {
+        if (frameId) cancelAnimationFrame(frameId);
+        frameId = 0;
+      }
+      function startParticles() {
+        stopParticles();
+        if (reducedMotion || document.hidden) drawParticles(false);
+        else drawParticles(true);
+      }
+      window.addEventListener('resize', resizeCanvas, { passive: true });
+      document.addEventListener('visibilitychange', startParticles);
+      resizeCanvas();
+      startParticles();
+    })();
+  </script>
+</body>
+</html>
